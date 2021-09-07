@@ -83,15 +83,15 @@ fn ownership_stack_copy() {
 // ownership and functions
 fn function_ownership() {
     let s = String::from("Hello");
-    takes_ownership(s); //s's value moves into the function and so is no longer valid below here
+    takes_ownership(&s); //s's value moves into the function and so is no longer valid below here
 
-    // println!("{}", s); <-- calling s here will result to error as it has already been dropped -->
+    println!("{}", s); // <-- calling s here will result to error as it has already been dropped -->
 
     let x = 5;
     makes_copy(x); // x wold move into function, but i32 is Copy, so its okay to still use x afterwards
 }
 
-fn takes_ownership(str: String) { // str comes into scope
+fn takes_ownership(str: &str) { // str comes into scope
     println!("{}", str);
 } // str goes out of scope and drop is called - the backing  memeory is freed
 
