@@ -1,5 +1,9 @@
 #![allow(unused)]
 
+// use std::cmp::PartialOrd;
+// use std::fmt::Display;
+// use std::fmt::Debug;
+
 // Generic are one of tools in any programming language for handling duplication of concepts
 
 fn main() {
@@ -19,8 +23,8 @@ fn find_largest_num(data: &Vec<i32>) -> i32 {
     let mut largest = data[0];
 
     for &num in data {
-        if(num > largest) {
-            largest = num; 
+        if (num > largest) {
+            largest = num;
         }
     }
 
@@ -39,8 +43,8 @@ fn find_largest_char(list: &[char]) -> char {
     largest
 }
 
-// generic function
-fn largest_value<T: std::cmp::PartialOrd>(list: &[T]) -> T {
+// generic function - adding bound traits
+fn largest_value<T: PartialOrd + Copy>(list: &[T]) -> T {
     let mut largest = list[0];
 
     for &item in list {
@@ -50,4 +54,23 @@ fn largest_value<T: std::cmp::PartialOrd>(list: &[T]) -> T {
     }
 
     largest
+}
+
+// above method can be simplified with syntactic sugar as below
+fn largest_value_sugar2(item: &impl PartialOrd) {}
+
+
+use std::cmp::PartialOrd;
+use std::fmt::Display;
+use std::fmt::Debug;
+
+fn largest_value_sugar<T, U, R>(t: &T, u: &U) -> Option<R>
+where
+    T: Display + Clone,
+    U: Clone + Debug,
+    R: Display + Copy,
+{
+
+    // your code here
+    return None
 }
