@@ -54,9 +54,21 @@ mod tester {
         assert!(!smaller.can_hold(&larger));
     }
 
+    // usig assert equals - can use any value of left or right parameters
     #[test]
     fn it_adds_two() {
         assert_eq!(4, add_two(2));
+    }
+
+    // testing with contains
+    #[test]
+    fn greeting_contains_name() {
+        let result = greeting("Carol");
+        assert!(
+            result.contains("Carol"),
+            "Greeting did not contain name, value was `{}`",
+            result
+        );
     }
 }
 
@@ -74,4 +86,49 @@ impl Rectangle {
 
 pub fn add_two(a: i32) -> i32 {
     a + 2
+}
+
+pub fn greeting(name: &str) -> String {
+    format!("Hello {}", name)
+    // String::from("Hello!")
+}
+
+// testing should panic macro
+pub struct Guess {
+    value: i32,
+}
+
+impl Guess {
+    pub fn new(value: i32) -> Guess {
+        if value < 1 || value > 100 {
+            panic!("Guess value must be less than or equal to 100");
+        }
+        Guess { value }
+    }
+}
+
+mod test_guess {
+    use super::*;
+
+    #[test]
+    #[should_panic(expected = "Guess value must be less than or equal to 100")]
+    fn greater_than_100() {
+        Guess::new(109);
+    }
+}
+
+// testing and showing outputs
+fn prints_and_returns_10(a: i32) -> i32 {
+    println!("I got the value {}", a);
+    10
+}
+
+mod test_outputs {
+    use super::*;
+
+    #[test]
+    fn passing_test() {
+        let value = prints_and_returns_10(34);
+        assert_eq!(10, value);
+    }
 }
