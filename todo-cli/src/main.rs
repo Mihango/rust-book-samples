@@ -1,6 +1,7 @@
 #![allow(unused)]
 
 use std::collections::HashMap;
+use std::error;
 use std::fs;
 use std::io;
 use std::io::Read;
@@ -26,7 +27,7 @@ fn main() {
             Some(_) => match todo.save() {
                 Ok(_) => println!("todo saved"),
                 Err(why) => println!("An error occured: {}", why),
-            }
+            },
         }
     }
 }
@@ -36,39 +37,73 @@ struct Todo {
 }
 
 impl Todo {
+    // reads string
+    // fn new() -> Result<Todo, io::Error> {
+    //     let mut f = std::fs::OpenOptions::new()
+    //         .write(true)
+    //         .create(true)
+    //         .read(true)
+    //         .open("db.txt")?;
+
+    //     let mut content = String::new();
+    //     f.read_to_string(&mut content)?; // have to use std::io::Read to bring read_to_string to scope
+
+    //     let map = content
+    //         .lines()
+    //         .map(|line| line.splitn(2, '\t').collect::<Vec<&str>>()) // splitting string at tabs and collecting to a collection
+    //         .map(|v| (v[0], v[1])) // converting collection to tuple
+    //         .map(|(k, v)| (String::from(k), bool::from_str(v).unwrap())) // converting to a hash map -- use std::str::FromStr to bring from_str to scope
+    //         .collect();
+
+    //     Ok(Todo { map })
+    // }
+
+    // reads json
     fn new() -> Result<Todo, io::Error> {
-        let mut f = std::fs::OpenOptions::new()
+        let f = fs::OpenOptions::new()
             .write(true)
-            .create(true)
             .read(true)
-            .open("db.txt")?;
+            .create(true)
+            .open("db.json")?;
 
-        let mut content = String::new();
-        f.read_to_string(&mut content)?; // have to use std::io::Read to bring read_to_string to scope
-
-        let map = content
-            .lines()
-            .map(|line| line.splitn(2, '\t').collect::<Vec<&str>>()) // splitting string at tabs and collecting to a collection
-            .map(|v| (v[0], v[1])) // converting collection to tuple
-            .map(|(k, v)| (String::from(k), bool::from_str(v).unwrap())) // converting to a hash map -- use std::str::FromStr to bring from_str to scope
-            .collect();
-
-        Ok(Todo { map })
+        // serialize json as hash map
+        match serde_json::from_reader(f) {
+            Ok(map) => Ok(Todo { map }),
+            Err(e) if e.is_eof() => Ok(Todo {
+                map: HashMap::new(),
+            }),
+            Err(e) => panic!("An error occured: {}", e),
+        }
     }
 
     fn insert(&mut self, key: String) {
         self.map.insert(key, true);
     }
 
-    fn save(self) -> Result<(), io::Error> {
-        let mut content = String::new();
+    // save for string
+    // fn save(self) -> Result<(), io::Error> {
+    //     let mut content = String::new();
 
-        for (k, v) in self.map {
-            let record = format!("{}\t{}\n", k, v);
-            content.push_str(&record);
-        }
+    //     for (k, v) in self.map {
+    //         let record = format!("{}\t{}\n", k, v);
+    //         content.push_str(&record);
+    //     }
 
-        fs::write("db.txt", content)
+    //     fs::write("db.txt", content)
+    // }
+
+    fn save(self) -> Result<(), Box<dyn error::Error>> {
+        // a Box is an allocation
+        // in memory
+        // open db.json
+        let f = fs::OpenOptions::new()
+            .write(true)
+            .create(true)
+            .open("db.json")?;
+
+        // write to file with serde
+        serde_json::to_writer_pretty(f, &self.map)?;
+        Ok(())
     }
 
     fn complete(&mut self, key: &String) -> Option<()> {

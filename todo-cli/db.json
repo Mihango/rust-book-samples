@@ -1,0 +1,6 @@
+{
+  "code kotlin": false,
+  "code compose": true,
+  "code rust": true,
+  "build stock system": true
+}
