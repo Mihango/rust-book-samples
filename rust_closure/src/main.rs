@@ -7,6 +7,9 @@ fn main() {
     println!("Hello, world!");
     let intensity = simulated_expensive_calculation(43);
     println!("Intensity returned >>>> {}", intensity);
+
+    // test closure capturing environment
+    closure_env();
 }
 
 fn simulated_expensive_calculation(intensity: u32) -> u32 {
@@ -127,3 +130,17 @@ fn generate_workout_cached(intensity: u32, random_number: u32) {
 
 // Cacher cannot be used with parameter types - while caching should support this: --
 // how to do it? -- use hash map for specific keys and use generic parameters
+
+
+// closures can capture their enviroment unlike functions -- hence capturing
+// variables defined with the scope e.g below closure use variable x even
+// thought it is not defined in it
+fn closure_env() {
+    let x = 4;
+
+    let equal_to_x = |z| z == x;
+
+    let y = 4;
+
+    assert!(equal_to_x(y));
+}
