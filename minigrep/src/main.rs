@@ -8,9 +8,9 @@ use minigrep::Config;
 fn main() {
     // get arguments using std::args function which returns an iterator
     // call iterator's collect method turns the data produced to a collection
-    let args: Vec<String> = env::args().collect();
+    // let args: Vec<String> = env::args().collect();
 
-    let config = Config::new(&args).unwrap_or_else(|err| {
+    let config = Config::new(env::args()).unwrap_or_else(|err| {
         eprintln!("Problem parging arguments: {}", err);
         process::exit(1);
     });
