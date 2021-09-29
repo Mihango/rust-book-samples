@@ -69,7 +69,17 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
 //     result
 // }
 
-// search using iterator adaptor
+///
+/// Searches a key in a given string using iterator adaptor. it is case sensitive
+/// 
+/// # Sample
+/// ```
+/// let contents = String::from("sample data here for quering the given key")
+/// let query = String::from("key")
+/// search(&query, &contents)
+/// ```
+/// 
+/// 
 pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
     contents
         .lines()
