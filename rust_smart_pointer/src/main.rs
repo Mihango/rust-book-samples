@@ -2,7 +2,7 @@ use crate::List::{Cons, Nil};
 fn main() {
     box_sample();
 
-    let list = Cons(1, Box::new(Cons(2, Box::new(Cons(3, Box::new(Nil))))));
+    testing_linked_list();
 }
 ///
 ///# Using Box to point to data on the heap. 
@@ -27,6 +27,7 @@ fn add_two(a: i32) -> i32 {
 }
 
 /// cons list demonstration similar to linkedlist
+#[derive(Debug)]
 enum List {
     Cons(i32, Box<List>),
     Nil,
@@ -55,7 +56,9 @@ enum List {
 ///```
 ///
 fn testing_linked_list() {
-
+    let list = Cons(1, Box::new(Cons(2, Box::new(Cons(3, Box::new(Nil))))));
+    
+    println!("Show list : {:?}", list);
 }
 
 /// # Computing the size of a Non-recursive type
