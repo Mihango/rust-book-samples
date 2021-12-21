@@ -1,11 +1,6 @@
 use add_one;
-use rand;
-
 fn main() {
-    let num = 10;
-    println!(
-        "Hello, world! {} plus one is {}",
-        num,
-        add_one::add_one(num)
-    );
+    let x = 23;
+    let value = add_one::add_one_num(x);
+    println!("{} + 1 = {}", x, value);
 }
